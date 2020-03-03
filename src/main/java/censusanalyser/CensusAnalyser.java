@@ -27,15 +27,17 @@ public class CensusAnalyser {
     public int loadIndianStateCode(String stateCsvFilePath) {
         try (Reader reader = Files.newBufferedReader(Paths.get(stateCsvFilePath));) {
             Iterator<IndianStateCodeCsv> stateCodeIterator = getCsvFileIterator(reader,IndianStateCodeCsv.class);
-            Iterable<IndianStateCodeCsv> stateCodeCsvIterable = () -> stateCodeIterator;
-            int numOfEnteries = (int) StreamSupport.stream(stateCodeCsvIterable.spliterator(), false).count();
-            return numOfEnteries;
+            return getCount(stateCodeIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
 
     }
-
+    private <E>int getCount(Iterator<E> stateCodeIterator) {
+        Iterable<E> stateCodeCsvIterable = () -> stateCodeIterator;
+        int numOfEnteries = (int) StreamSupport.stream(stateCodeCsvIterable.spliterator(), false).count();
+        return numOfEnteries;
+    }
     private <E>Iterator<E> getCsvFileIterator(Reader reader,Class csvClass) {
         CsvToBean<E> csvToBean;
         Iterator<E> censusCSVIterator;
