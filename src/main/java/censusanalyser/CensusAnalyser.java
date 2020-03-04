@@ -1,13 +1,11 @@
 package censusanalyser;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
@@ -15,8 +13,8 @@ public class CensusAnalyser {
         Iterator<IndiaCensusCSV> censusCSVIterator;
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
             IcsvBuilder openCsvBuilder = CsvBuilderFactory.getOpenCsvBuilder();
-            censusCSVIterator = openCsvBuilder.getCsvFileIterator(reader,IndiaCensusCSV.class);
-            return getCount(censusCSVIterator);
+            List<IndiaCensusCSV> censusCSV = openCsvBuilder.getCsvFileList(reader,IndiaCensusCSV.class);
+            return censusCSV.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
