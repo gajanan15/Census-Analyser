@@ -7,15 +7,13 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
 
 public class CensusLoader {
     Map<String,CensusCSVDTO> censusMap = new HashMap<>();
-    public  <E> Map<String,CensusCSVDTO> loadCensusData(String csvFilePath, Class<E> censusCsvClass) {
+    public  <E> Map<String,CensusCSVDTO> loadCensusData(Class<E> censusCsvClass, String... csvFilePath) {
 
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath[0]));) {
             IcsvBuilder openCsvBuilder = CsvBuilderFactory.getOpenCsvBuilder();
             Iterator<E> censusCSVIterator = openCsvBuilder.getCsvFileIterator(reader, censusCsvClass);
             Iterable<E> censusCSVIterable = () -> censusCSVIterator;
@@ -28,6 +26,9 @@ public class CensusLoader {
                         .map(UsCensusCSV.class::cast)
                         .forEach(censusCSV -> censusMap.put(censusCSV.state, new CensusCSVDTO(censusCSV)));
             }
+            if (csvFilePath.length == 1)
+                return censusMap;
+            this.loadIndianStateCode(censusMap,csvFilePath[1]);
             return censusMap;
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -35,4 +36,19 @@ public class CensusLoader {
         }
 
     }
+    public int loadIndianStateCode(Map<String, CensusCSVDTO> censusMap, String stateCsvFilePath) {
+        try (Reader reader = Files.newBufferedReader(Paths.get(stateCsvFilePath));) {
+            IcsvBuilder openCsvBuilder = CsvBuilderFactory.getOpenCsvBuilder();
+            Iterator<IndianStateCodeCsv> stateCodeIterator = openCsvBuilder.getCsvFileIterator(reader, IndianStateCodeCsv.class);
+            Iterable<IndianStateCodeCsv> csv = () -> stateCodeIterator;
+            StreamSupport.stream(csv.spliterator(), false)
+                    .filter(indianStateCodeCsv -> censusMap.get(indianStateCodeCsv.stateName) != null)
+                    .forEach(indianStateCodeCsv -> censusMap.get(indianStateCodeCsv.stateName).stateCode = indianStateCodeCsv.stateCode);
+            return censusMap.size();
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        }
+
+    }
+
 }
