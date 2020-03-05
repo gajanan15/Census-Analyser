@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CensusAnalyser {
+    public enum Country{INDIA,US};
+
     List<CensusCSVDTO> censusList = null;
     Map<String, CensusCSVDTO> censusMap = null;
     List<CensusCSVDTO> collectList = null;
@@ -16,13 +18,13 @@ public class CensusAnalyser {
         this.censusMap = new HashMap<>();
     }
 
-    public int loadIndiaCensusData(String... csvFilePath) {
-        censusMap = censusLoader.loadCensusData(IndiaCensusCSV.class, csvFilePath);
+    public int loadCensusData(Country country,String... csvFilePath) {
+        censusMap = censusLoader.loadCensusData(country, csvFilePath);
         return censusMap.size();
     }
 
-    public int loadUsCensusData(String... usCsvFilePath) {
-        censusMap = censusLoader.loadCensusData(UsCensusCSV.class, usCsvFilePath);
+    public int loadUsCensusData(Country country,String... usCsvFilePath) {
+        censusMap = censusLoader.loadCensusData(country, usCsvFilePath);
         return censusMap.size();
     }
 
