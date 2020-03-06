@@ -11,7 +11,7 @@ public class CensusAnalyser {
     Map<String, CensusCSVDTO> censusMap = null;
     List<CensusCSVDTO> collectList = null;
 
-    CensusLoader censusLoader = new CensusLoader();
+    IndianCensusAdapter censusLoader = new IndianCensusAdapter();
 
     public CensusAnalyser() {
         this.censusList = new ArrayList<>();
@@ -19,7 +19,7 @@ public class CensusAnalyser {
     }
 
     public int loadCensusData(Country country,String... csvFilePath) {
-        censusMap = censusLoader.loadCensusData(country, csvFilePath);
+        censusMap = CensusAdapterFactory.getCensusData(country,csvFilePath);
         return censusMap.size();
     }
 

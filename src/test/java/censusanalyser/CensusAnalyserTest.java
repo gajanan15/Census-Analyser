@@ -38,7 +38,7 @@ public class CensusAnalyserTest {
     public void givenIndiaCensusData_WhenSortedOnState_ShouldReturnSortedResult() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH);
+            censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH,INDIA_STATE_CODE_CSV_FILE_PATH);
             String sortedCensusData = censusAnalyser.getStateWiseSortedCensusData();
             IndiaCensusCSV[] censusCSVS = new Gson().fromJson(sortedCensusData, IndiaCensusCSV[].class);
             Assert.assertEquals("Andhra Pradesh", censusCSVS[0].state);
@@ -46,10 +46,10 @@ public class CensusAnalyserTest {
     }
 
     @Test
-    public void givenIndianCensusData_WhenSortedOnPolulation_ShouldReturnLeastPopulationState() {
+    public void givenIndianCensusData_WhenSortedOnPopulation_ShouldReturnLeastPopulationState() {
         try{
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH);
+            censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH,INDIA_STATE_CODE_CSV_FILE_PATH);
             String populationCensusData = censusAnalyser.getStateWisePopulationCensusData();
             IndiaCensusCSV[] censusCSV = new Gson().fromJson(populationCensusData,IndiaCensusCSV[].class);
             Assert.assertEquals(607688,censusCSV[0].population);
@@ -62,7 +62,7 @@ public class CensusAnalyserTest {
     public void givenIndianCensusData_WhenSortedOnDensity_ShouldReturnLeastPopulationState() {
         try{
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH);
+            censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH,INDIA_STATE_CODE_CSV_FILE_PATH);
             String populationCensusData = censusAnalyser.getStateWisePopulationDensityCensusData();
             IndiaCensusCSV[] indiacensusCSV = new Gson().fromJson(populationCensusData,IndiaCensusCSV[].class);
             Assert.assertEquals(50,indiacensusCSV[0].populationDensity);

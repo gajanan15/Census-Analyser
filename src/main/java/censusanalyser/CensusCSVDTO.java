@@ -18,7 +18,7 @@ public class CensusCSVDTO {
         state = censusCSV.state;
         stateCode = censusCSV.stateId;
         population=censusCSV.population;
-        totalArea = censusCSV.totalarea;
+        totalArea = censusCSV.totalArea;
         populationDensity=censusCSV.populationDensity;
     }
 }
